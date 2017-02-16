@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "CommonUtil.h"
+#import "AccelerateTester.h"
 
 @interface ViewController ()
 
@@ -19,6 +21,12 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
+- (IBAction)doFFT:(id)sender {
+    NSString* pcmFilePath = [CommonUtil bundlePath:@"vocal.pcm"];
+    NSString* resultFilePath = [CommonUtil documentsPath:@"vDspResult.txt"];
+    AccelerateTester* tester = [[AccelerateTester alloc] init];
+    [tester doFFTTestWithPCMFilePath:pcmFilePath resultFilePath:resultFilePath];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
