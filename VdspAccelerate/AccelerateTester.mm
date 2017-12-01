@@ -8,8 +8,10 @@
 
 #import "AccelerateTester.h"
 #import <Accelerate/Accelerate.h>
+#import <QuartzCore/CABase.h>
 #import <stdio.h>
 #import "CommonUtil.h"
+#include "fft_routine.h"
 
 #define NFFT        2048
 
@@ -20,6 +22,8 @@
     struct OpaqueFFTSetup*                  fftsetup;
     int                                     m_LOG_N;
     size_t                                  m_halfSize;
+    
+    FftRoutine* fftRoutine;
 }
 - (void) doFFTTestWithPCMFilePath:(NSString*) pcmFilePath resultFilePath: (NSString*) resultFilePath;
 {
@@ -36,19 +40,28 @@
     for (int ti = 0; ti < NFFT; ti++) {
         m_hannwindow[ti] = -0.5 * cos(2 * PI * ti / NFFT) + 0.5;
     }
-    [self setupFFT];
+    [self setupMayerFFT];
+    [self setupDSPFFT];
     size_t actualReadSize = -1;
+    float totalDSPTime = 0;
+    float totalMayerTime = 0;
     while((actualReadSize = fread(buffer, sizeof(short), NFFT, pcmFile)) > 0) {
         for(int i = 0; i < actualReadSize; i++) {
             fftBuffer[i] = buffer[i] / 32768.0f * m_hannwindow[i];
         }
-        [self FftForward:fftBuffer rePart:fftfreqRe imPart:fftfreqIm];
+        double startTime = CACurrentMediaTime();
+        [self mayerFFTForward:fftBuffer rePart:fftfreqRe imPart:fftfreqIm];
+        totalMayerTime+=(CACurrentMediaTime() - startTime);
+        startTime = CACurrentMediaTime();
+        [self dspFFTForward:fftBuffer rePart:fftfreqRe imPart:fftfreqIm];
+        totalDSPTime+=(CACurrentMediaTime() - startTime);
         for(int i = 0; i < correcSize - 1; i++){
             float result = fftfreqRe[i] * fftfreqRe[i] + fftfreqIm[i] * fftfreqIm[i];
             fwrite(&result, sizeof(float), 1, resultFile);
         }
     }
-    [self releaseFFT];
+    NSLog(@"totalDSPTime is %f ms totalMayerTime is %f ms", totalDSPTime * 1000, totalMayerTime * 1000);
+    [self releaseDSPFFT];
     fclose(pcmFile);
     fclose(resultFile);
     delete[] buffer;
@@ -58,7 +71,11 @@
     delete[] m_hannwindow;
 }
 
-- (void) setupFFT
+- (void) setupMayerFFT
+{
+    fftRoutine = new FftRoutine(NFFT);
+}
+- (void) setupDSPFFT
 {
     m_halfSize = NFFT/2;
     m_LOG_N = round(phuket_log2(NFFT));
@@ -69,7 +86,12 @@
     memset(tempSplitComplex.imagp,0,sizeof(float)*(m_halfSize+1));
 }
 
-- (void) FftForward:(float*) inputData rePart:(float*) outputRe imPart:(float*) outputIm;
+- (void) mayerFFTForward:(float*) inputData rePart:(float*) outputRe imPart:(float*) outputIm;
+{
+    fftRoutine->fft_forward(inputData, outputRe, outputIm);
+}
+
+- (void) dspFFTForward:(float*) inputData rePart:(float*) outputRe imPart:(float*) outputIm;
 {
     vDSP_ctoz((DSPComplex*)inputData, 2, &tempSplitComplex, 1, NFFT / 2);
     vDSP_fft_zrip(fftsetup, &tempSplitComplex, 1, m_LOG_N, kFFTDirection_Forward);
@@ -82,7 +104,15 @@
     vDSP_vsmul(outputIm, 1, &scale, outputIm, 1, NFFT/2);
 }
 
-- (void) releaseFFT
+- (void) releaseMayerFFT
+{
+    if (fftRoutine) {
+        delete fftRoutine;
+        fftRoutine = NULL;
+    }
+}
+
+- (void) releaseDSPFFT
 {
     if (fftsetup) {
         vDSP_destroy_fftsetup(fftsetup);

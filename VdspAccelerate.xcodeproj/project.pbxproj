@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1827987B1E64323000992B53 /* mayer_fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 182798791E64323000992B53 /* mayer_fft.cpp */; };
 		18D6760A1E53F99D00183876 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D676091E53F99D00183876 /* main.m */; };
 		18D6760D1E53F99E00183876 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D6760C1E53F99E00183876 /* AppDelegate.m */; };
 		18D676101E53F99E00183876 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D6760F1E53F99E00183876 /* ViewController.m */; };
@@ -39,6 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		182798781E64323000992B53 /* fft_routine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_routine.h; sourceTree = "<group>"; };
+		182798791E64323000992B53 /* mayer_fft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mayer_fft.cpp; sourceTree = "<group>"; };
+		1827987A1E64323000992B53 /* mayer_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mayer_fft.h; sourceTree = "<group>"; };
 		18D676051E53F99D00183876 /* VdspAccelerate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VdspAccelerate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D676091E53F99D00183876 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		18D6760B1E53F99D00183876 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -89,6 +93,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		182798771E64323000992B53 /* mayer_fft */ = {
+			isa = PBXGroup;
+			children = (
+				182798781E64323000992B53 /* fft_routine.h */,
+				182798791E64323000992B53 /* mayer_fft.cpp */,
+				1827987A1E64323000992B53 /* mayer_fft.h */,
+			);
+			path = mayer_fft;
+			sourceTree = "<group>";
+		};
 		18D675FC1E53F99B00183876 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +127,7 @@
 		18D676071E53F99D00183876 /* VdspAccelerate */ = {
 			isa = PBXGroup;
 			children = (
+				182798771E64323000992B53 /* mayer_fft */,
 				18D6763D1E53FBE200183876 /* resource */,
 				18D6763F1E53FBE200183876 /* utils */,
 				18D6760B1E53F99D00183876 /* AppDelegate.h */,
@@ -321,6 +336,7 @@
 				18D676101E53F99E00183876 /* ViewController.m in Sources */,
 				18D6760D1E53F99E00183876 /* AppDelegate.m in Sources */,
 				18D6764B1E53FD6700183876 /* AccelerateTester.mm in Sources */,
+				1827987B1E64323000992B53 /* mayer_fft.cpp in Sources */,
 				18D676431E53FBE200183876 /* CommonUtil.m in Sources */,
 				18D6760A1E53F99D00183876 /* main.m in Sources */,
 			);
@@ -552,6 +568,7 @@
 				18D676341E53F9A000183876 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		18D676351E53F9A000183876 /* Build configuration list for PBXNativeTarget "VdspAccelerateTests" */ = {
 			isa = XCConfigurationList;
@@ -560,6 +577,7 @@
 				18D676371E53F9A000183876 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		18D676381E53F9A000183876 /* Build configuration list for PBXNativeTarget "VdspAccelerateUITests" */ = {
 			isa = XCConfigurationList;
@@ -568,6 +586,7 @@
 				18D6763A1E53F9A000183876 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
